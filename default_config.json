@@ -1,0 +1,55 @@
+{
+    "general": {
+        "threads": 10,
+        "timeout": 30,
+        "user_agent": "Sayer-Scanner/1.0"
+    },
+    "info_gathering": {
+        "whois": true,
+        "dns": true,
+        "ssl": true,
+        "headers": true,
+        "tech_detection": true
+    },
+    "web_scanner": {
+        "crawl_depth": 3,
+        "forms_scan": true,
+        "directory_scan": true,
+        "file_scan": true,
+        "common_files": [
+            "robots.txt",
+            ".git/HEAD",
+            ".env",
+            "wp-config.php",
+            "config.php",
+            "phpinfo.php",
+            ".htaccess",
+            "server-status",
+            "crossdomain.xml",
+            "sitemap.xml"
+        ]
+    },
+    "network_scanner": {
+        "port_range": "1-1000",
+        "service_detection": true,
+        "os_detection": true,
+        "traceroute": true
+    },
+    "vulnerability_scanner": {
+        "xss": true,
+        "sqli": true,
+        "lfi": true,
+        "rfi": true,
+        "open_redirect": true,
+        "csrf": true,
+        "clickjacking": true,
+        "cors": true,
+        "ssl_tls": true,
+        "cve_check": true
+    },
+    "report": {
+        "format": ["console", "html", "json"],
+        "include_screenshots": false,
+        "risk_threshold": "low"
+    }
+}

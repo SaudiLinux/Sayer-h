@@ -1,0 +1,146 @@
+{
+    "web": {
+        "xss": {
+            "patterns": [
+                "<script>alert(1)</script>",
+                "<img src=x onerror=alert(1)>",
+                "javascript:alert(1)"
+            ],
+            "description": "Cross-Site Scripting (XSS) يسمح للمهاجمين بحقن نصوص برمجية ضارة في صفحات الويب التي يشاهدها المستخدمون الآخرون.",
+            "risk": "high",
+            "remediation": "استخدم ترميز المدخلات وتحقق من صحتها، واستخدم سياسة أمان المحتوى (CSP)."
+        },
+        "sqli": {
+            "patterns": [
+                "' OR 1=1 --",
+                "\" OR 1=1 --",
+                "1' OR '1'='1",
+                "admin'--"
+            ],
+            "description": "حقن SQL يسمح للمهاجمين بالتلاعب بالاستعلامات المرسلة إلى قاعدة البيانات.",
+            "risk": "critical",
+            "remediation": "استخدم الاستعلامات المعدة مسبقًا والمعلمات المقيدة، وتحقق من صحة المدخلات."
+        },
+        "lfi": {
+            "patterns": [
+                "../../../etc/passwd",
+                "..\\..\\..\\windows\\win.ini",
+                "file:///etc/passwd",
+                "php://filter/convert.base64-encode/resource="
+            ],
+            "description": "تضمين الملفات المحلية (LFI) يسمح للمهاجمين بالوصول إلى الملفات المحلية على الخادم.",
+            "risk": "high",
+            "remediation": "تجنب استخدام مدخلات المستخدم في مسارات الملفات، واستخدم قائمة بيضاء للملفات المسموح بها."
+        },
+        "rfi": {
+            "patterns": [
+                "http://evil.com/shell.php",
+                "https://attacker.com/malicious.php",
+                "ftp://evil.com/shell.php"
+            ],
+            "description": "تضمين الملفات البعيدة (RFI) يسمح للمهاجمين بتضمين ملفات ضارة من مصادر خارجية.",
+            "risk": "critical",
+            "remediation": "تعطيل تضمين الملفات البعيدة في إعدادات PHP، واستخدم قائمة بيضاء للمصادر المسموح بها."
+        },
+        "open_redirect": {
+            "patterns": [
+                "https://evil.com",
+                "//evil.com",
+                "javascript:alert(document.cookie)"
+            ],
+            "description": "إعادة التوجيه المفتوح يسمح للمهاجمين بإعادة توجيه المستخدمين إلى مواقع ضارة.",
+            "risk": "medium",
+            "remediation": "استخدم قائمة بيضاء للمواقع المسموح بإعادة التوجيه إليها، أو استخدم معرفات بدلاً من عناوين URL الكاملة."
+        },
+        "csrf": {
+            "description": "تزوير طلبات المواقع المتعددة (CSRF) يسمح للمهاجمين بتنفيذ إجراءات غير مصرح بها نيابة عن المستخدم المصادق عليه.",
+            "risk": "high",
+            "remediation": "استخدم رموز CSRF في النماذج، وتحقق من رأس Referer، واستخدم SameSite للكوكيز."
+        },
+        "clickjacking": {
+            "description": "Clickjacking يسمح للمهاجمين بخداع المستخدمين للنقر على عناصر مخفية.",
+            "risk": "medium",
+            "remediation": "استخدم رأس X-Frame-Options أو سياسة أمان المحتوى لمنع تضمين الصفحة في إطارات."
+        },
+        "cors": {
+            "description": "سياسة مشاركة الموارد عبر المواقع (CORS) غير الآمنة قد تسمح بالوصول غير المصرح به إلى البيانات.",
+            "risk": "medium",
+            "remediation": "قيد رؤوس Access-Control-Allow-Origin لمواقع محددة فقط، وتجنب استخدام الإعدادات المتساهلة."
+        }
+    },
+    "headers": {
+        "missing_security_headers": {
+            "X-Frame-Options": {
+                "description": "يحمي من هجمات clickjacking عن طريق منع تضمين الصفحة في إطارات.",
+                "risk": "medium",
+                "remediation": "أضف رأس X-Frame-Options: DENY أو SAMEORIGIN."
+            },
+            "X-XSS-Protection": {
+                "description": "يوفر حماية إضافية ضد هجمات XSS في المتصفحات الحديثة.",
+                "risk": "low",
+                "remediation": "أضف رأس X-XSS-Protection: 1; mode=block."
+            },
+            "X-Content-Type-Options": {
+                "description": "يمنع المتصفحات من تفسير الملفات كنوع محتوى مختلف عن النوع المعلن.",
+                "risk": "low",
+                "remediation": "أضف رأس X-Content-Type-Options: nosniff."
+            },
+            "Content-Security-Policy": {
+                "description": "يحدد مصادر المحتوى المسموح بها، مما يوفر حماية قوية ضد XSS وهجمات حقن البيانات الأخرى.",
+                "risk": "medium",
+                "remediation": "أضف رأس Content-Security-Policy مع سياسة مناسبة."
+            },
+            "Strict-Transport-Security": {
+                "description": "يضمن استخدام HTTPS بدلاً من HTTP، مما يحمي من هجمات التنصت وهجمات الوسيط.",
+                "risk": "medium",
+                "remediation": "أضف رأس Strict-Transport-Security: max-age=31536000; includeSubDomains."
+            }
+        }
+    },
+    "ssl_tls": {
+        "weak_ciphers": {
+            "description": "استخدام خوارزميات تشفير ضعيفة قد يسمح بفك التشفير أو اعتراض الاتصالات.",
+            "risk": "high",
+            "remediation": "تعطيل خوارزميات التشفير الضعيفة وتمكين الخوارزميات القوية فقط."
+        },
+        "weak_protocols": {
+            "SSLv2": {
+                "description": "بروتوكول SSLv2 ضعيف ومعرض للعديد من الهجمات.",
+                "risk": "critical",
+                "remediation": "تعطيل SSLv2 وتمكين TLS 1.2 أو أحدث فقط."
+            },
+            "SSLv3": {
+                "description": "بروتوكول SSLv3 معرض لهجمة POODLE وغيرها.",
+                "risk": "high",
+                "remediation": "تعطيل SSLv3 وتمكين TLS 1.2 أو أحدث فقط."
+            },
+            "TLS1.0": {
+                "description": "بروتوكول TLS 1.0 معرض لعدة ثغرات أمنية.",
+                "risk": "medium",
+                "remediation": "تعطيل TLS 1.0 وتمكين TLS 1.2 أو أحدث فقط."
+            },
+            "TLS1.1": {
+                "description": "بروتوكول TLS 1.1 أقل أمانًا من الإصدارات الأحدث.",
+                "risk": "low",
+                "remediation": "تعطيل TLS 1.1 وتمكين TLS 1.2 أو أحدث فقط."
+            }
+        },
+        "cert_issues": {
+            "self_signed": {
+                "description": "الشهادات الموقعة ذاتيًا لا يمكن التحقق منها بواسطة طرف ثالث موثوق به.",
+                "risk": "medium",
+                "remediation": "استخدم شهادات موقعة من سلطة شهادات معترف بها."
+            },
+            "expired": {
+                "description": "الشهادات منتهية الصلاحية قد تؤدي إلى تحذيرات في المتصفح وتقليل الثقة.",
+                "risk": "high",
+                "remediation": "جدد الشهادة قبل انتهاء صلاحيتها."
+            },
+            "wrong_host": {
+                "description": "الشهادة غير صالحة للاسم المضيف المطلوب.",
+                "risk": "high",
+                "remediation": "استخدم شهادة تتضمن جميع أسماء المضيفين المطلوبة."
+            }
+        }
+    }
+}
